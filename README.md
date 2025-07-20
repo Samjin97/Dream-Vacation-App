@@ -8,31 +8,44 @@ This project containerizes the **Dream Vacation App**, which includes a React fr
 
 ### 1. Cloned the Repository
 
-I started by cloning the provided repository:
+I started by cloning the provided repository with:
 
 git clone https://github.com/obusorezekiel/Dream-Vacation-App.git
+
 cd Dream-Vacation-App
+
+---
 
 ### 2. Installed Docker & Docker Compose
 
 I installed Docker and Docker Compose on an Ubuntu EC2 instance with the following commands:
 
 sudo apt update
+
 sudo apt install docker.io docker-compose -y
+
 sudo systemctl start docker
+
 sudo systemctl enable docker
 
 ---
 
 ### 3. Created `frontend/Dockerfile`
 
+---
+
 ### 4. Created `backend/Dockerfile`
 
+---
+
 ### 5. Created `.env` and `.env.example`
+
+---
 
 To separate private credentials from public config:
 
 - `.env` → Contains sensitive values (not pushed to GitHub)
+
 - `.env.example` → Public template
 
 ---
@@ -41,6 +54,7 @@ To separate private credentials from public config:
 
 Orchestrates the full app: frontend, backend, and PostgreSQL.
 
+---
 
 ### 7. Logged Into Docker Hub and Pushed Images
 
@@ -52,13 +66,18 @@ Then built and pushed images:
 
 # Backend
 docker build -t samjin97/dream-vacation-backend ./backend
+
 docker push samjin97/dream-vacation-backend
 
 # Frontend
+
 docker build -t samjin97/dream-vacation-frontend ./frontend
+
 docker push samjin97/dream-vacation-frontend
 
 Screenshots of both images on Docker Hub were taken after pushing.
+
+---
 
 ### 8. Ran the App
 
