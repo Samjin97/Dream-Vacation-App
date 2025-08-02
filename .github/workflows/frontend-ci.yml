@@ -15,7 +15,7 @@ on:
   
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: DVA-frontend
+  IMAGE_NAME: dva-frontend
 
 jobs:
   lint-and-build:
