@@ -1,116 +1,54 @@
-# Dream Vacation App – Dockerized with Docker Compose
+# Dream Vacation App CI/CD Pipeline
 
-This project containerizes the **Dream Vacation App**, which includes a React frontend, a Node.js backend, and a PostgreSQL database. The goal was to dockerize each part and run the full app using Docker Compose.
+This repository uses GitHub Actions to automate linting, Docker image building, and Docker Hub image publishing for both the frontend and backend of the Dream Vacation App.
 
----
 
-## My Workflow
+## CI/CD Workflow Overview
 
-### 1. Cloned the Repository
+Both the frontend and backend pipelines perform the following:
 
-I started by cloning the provided repository with:
+- Run on push and pull requests to the `dev` branch
+- Lint JavaScript files using GitHub Super Linter
+- Build Docker images using Buildx
+- Tag images with the short Git commit SHA (e.g., `abc1234`)
+- Push images to Docker Hub
 
-git clone https://github.com/obusorezekiel/Dream-Vacation-App.git
+## GitHub Secrets Required
 
-cd Dream-Vacation-App
+| Secret Name            | Purpose                         |
+|------------------------|----------------------------------|
+| `DOCKERHUB_USERNAME`   | Your Docker Hub username         |
+| `DOCKERHUB_TOKEN`      | Your Docker Hub personal access token |
 
----
+## Linting
 
-### 2. Installed Docker & Docker Compose
+Linting is handled using the GitHub Super Linter with default ESLint rules. No custom ESLint configuration or `package.json` modification is required.
 
-I installed Docker and Docker Compose on an Ubuntu EC2 instance with the following commands:
+## Docker Image Tagging
 
-sudo apt update
+Each Docker image is tagged using the short SHA of the current commit. Example tags:
 
-sudo apt install docker.io docker-compose -y
+- `docker.io/your-username/dva-frontend:abc1234`
+- `docker.io/your-username/dva-backend:abc1234`
 
-sudo systemctl start docker
+## Docker Push
 
-sudo systemctl enable docker
+Docker images are pushed to Docker Hub after a successful build using credentials stored in GitHub secrets.
 
----
+## CI Execution Screenshots
 
-### 3. Created `frontend/Dockerfile`
+### Frontend CI Success
 
----
+<img src="Screenshots/frontend CI running successfully.PNG" alt="Frontend CI Success" width="800"/>
 
-### 4. Created `backend/Dockerfile`
+### Backend CI Success
 
----
+<img src="Screenshots/backend CI running successfully.PNG" alt="Backend CI Success" width="800"/>
 
-### 5. Created `.env` and `.env.example`
+## Expected Outcomes
 
----
+After setting up this CI/CD pipeline:
 
-To separate private credentials from public config:
-
-- `.env` → Contains sensitive values (not pushed to GitHub)
-
-- `.env.example` → Public template
-
----
-
-### 6. Created `docker-compose.yml`
-
-Orchestrates the full app: frontend, backend, and PostgreSQL.
-
----
-
-### 7. Logged Into Docker Hub and Pushed Images
-
-Logged in from CLI:
-
-docker login command
-
-Then built and pushed images:
-
-# Backend
-docker build -t samjin97/dream-vacation-backend ./backend
-
-docker push samjin97/dream-vacation-backend
-
-# Frontend
-
-docker build -t samjin97/dream-vacation-frontend ./frontend
-
-docker push samjin97/dream-vacation-frontend
-
-Screenshots of both images on Docker Hub were taken after pushing.
-
----
-
-### 8. Ran the App
-
-To start all services:
-
-docker-compose up --build
-
----
-
-## Project Structure
-
-```
-Dream-Vacation-App/
-├── backend/
-│   └── Dockerfile
-├── frontend/
-│   └── Dockerfile
-├── .env              # hidden
-├── .env.example      # safe to share
-├── docker-compose.yml
-└── README.md
-```
-
----
-
-## Features
-
-- React frontend served by nginx
-- Node.js backend running on port 3001
-- PostgreSQL database with Docker volume persistence
-- Environment variables managed with `.env`
-- Secure separation using `.env.example`
-- Images pushed to Docker Hub
-- All services started with `docker-compose up --build`
-
----
+- Lint checks run automatically on pushes and pull requests
+- Docker images are built and tagged with each commit
+- Tagged images are pushed to your Docker Hub registry
