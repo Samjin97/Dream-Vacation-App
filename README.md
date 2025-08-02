@@ -1,7 +1,6 @@
-# Dream Vacation App CI/CD Pipeline
+# Dream Vacation App CI Pipeline
 
 This repository uses GitHub Actions to automate linting, Docker image building, and Docker Hub image publishing for both the frontend and backend of the Dream Vacation App.
-
 
 ## CI/CD Workflow Overview
 
