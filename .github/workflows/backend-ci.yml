@@ -2,12 +2,12 @@ name: Backend CI
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ ops ]
     paths:
       - 'backend/**'
       - '.github/workflows/backend-ci.yml'
   pull_request:
-    branches: [ dev ]
+    branches: [ ops ]
     paths:
       - 'backend/**'
       - '.github/workflows/backend-ci.yml'
@@ -28,7 +28,7 @@ jobs:
       - name: Lint checks
         uses: github/super-linter@v6
         env:
-          DEFAULT_BRANCH: dev
+          DEFAULT_BRANCH: ops
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_JAVASCRIPT_ES: true
@@ -52,5 +52,7 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }}
+            ${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
 
