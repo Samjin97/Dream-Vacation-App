@@ -51,10 +51,10 @@ The single `ci-cd-pipeline.yml` workflow performs the following steps:
 ![EC2 Running](Screenshots/dream-app-instance.PNG)
 
 ### 5. App Running in Browser  
-![App in Browser](Screenshots/App in the browse.PNG)
+![App in Browser](Screenshots/dream-app.PNG)
 
 ### 6. CI/CD Pipeline Logs – Successful Deployment  
-![Pipeline Success](Screenshots/Pipeline log.PNG)
+![Pipeline Success](Screenshots/pipeline-log.PNG)
 
 ---
 
@@ -62,10 +62,8 @@ The single `ci-cd-pipeline.yml` workflow performs the following steps:
 
 After setting up this CI/CD pipeline:
 
-- ✅ Lint checks run automatically on pushes and pull requests  
-- ✅ Docker images are built and tagged with each commit  
-- ✅ Tagged images are pushed to Docker Hub  
-- ✅ EC2 instance automatically updates with the latest changes  
-- ✅ Application is accessible via the EC2 public IP in the browser  
-
-
+- Lint checks run automatically on pushes and pull requests  
+- Docker images are built and tagged with each commit  
+- Tagged images are pushed to Docker Hub  
+- EC2 instance automatically updates with the latest changes  
+- Application is accessible via the EC2 public IP in the browser  
