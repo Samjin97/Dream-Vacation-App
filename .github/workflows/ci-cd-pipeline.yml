@@ -110,10 +110,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: |
-            docker-compose.yml
-            frontend/**
-            backend/**
+          source: "./*"
           target: ~/dream-vacation-app
 
       - name: SSH into EC2 and Deploy
