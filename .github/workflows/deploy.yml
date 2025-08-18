@@ -1,20 +1,40 @@
-name: Deploy to EC2
+name: CI Pipeline + Deploy
 
 on:
-  workflow_run:
-    workflows: [ "Frontend CI", "Backend CI" ]
+  push:
     branches: [ ops ]
-    types: [completed]
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - 'docker-compose.yml'
+      - '.github/worflows/**'
+  pull_request:
+    branches: [ ops ]
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - 'docker-compose.yml'
+      - '.github/worflows/**'
   workflow_dispatch:
-  
+
 jobs:
+  backend:
+    uses: ./.github/workflows/backend-ci.yml
+    with:
+      image_name: dva-backend
+
+  frontend:
+    uses: ./.github/workflows/frontend-ci.yml
+    with:
+      image_name: dva-frontend
+
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: [ backend, frontend ]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Copy files to EC2
         uses: appleboy/scp-action@v0.1.7
@@ -22,7 +42,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: ./*
+          source: "./*"
           target: ~/dream-vacation-app
 
       - name: SSH into EC2 and Deploy
@@ -35,4 +55,3 @@ jobs:
             cd ~/dream-vacation-app
             docker compose pull
             docker compose up -d --remove-orphans
-
