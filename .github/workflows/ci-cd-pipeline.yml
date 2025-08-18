@@ -101,6 +101,8 @@ jobs:
     needs: [ frontend, backend ]
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Copy files to EC2
         uses: appleboy/scp-action@v0.1.7
