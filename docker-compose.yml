@@ -1,28 +1,28 @@
+version: "3.9"
+
 services:
   db:
     image: postgres:13
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+    env_file:
+      - .env
     ports:
       - "5432:5432"
 
   backend:
-    image: samjin97/dva-backend:latest
+    image: docker.io/samjin97/dva-backend:latest
     restart: always
-    environment:
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB} 
+    env_file:
+      - .env
     ports:
       - "3001:3001"
     depends_on:
       - db
 
   frontend:
-    image: samjin97/dva-frontend:latest
+    image: docker.io/samjin97/dva-frontend:latest
     restart: always
     ports:
       - "3000:80"
