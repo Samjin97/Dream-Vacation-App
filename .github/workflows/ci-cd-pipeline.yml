@@ -112,7 +112,6 @@ jobs:
             docker-compose.yml
             frontend/**
             backend/**
-            .github/workflows/**
           target: ~/dream-vacation-app
 
       - name: SSH into EC2 and Deploy
