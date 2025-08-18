@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   db:
     image: postgres:13
@@ -12,7 +10,7 @@ services:
       - "5432:5432"
 
   backend:
-    build: ./backend
+    image: samjin97/dva-backend:latest
     restart: always
     env_file:
       - .env
@@ -22,7 +20,7 @@ services:
       - db
 
   frontend:
-    build: ./frontend
+    image: samjin97/dva-frontend:latest
     restart: always
     ports:
       - "3000:80"
