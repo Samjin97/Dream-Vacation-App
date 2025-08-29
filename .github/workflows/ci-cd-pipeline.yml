@@ -143,12 +143,12 @@ jobs:
         run: |
           for i in {1..30}; do
             echo "Attempt $i: Checking SSH..."
-            if ssh -o StrictHostKeyChecking=no -i "$HOME/.ssh/dream-key" ubuntu@${{ needs.terraform.outputs.ec2_ip }} "echo '✅ SSH ready'"; then
+            if ssh -o StrictHostKeyChecking=no -i <(echo "${{ secrets.EC2_SSH_KEY }}") ubuntu@${{ needs.terraform.outputs.ec2_ip }} "echo '✅ SSH ready'"; then
               echo "EC2 is ready for SSH"
               break
             fi
             sleep 10
-          done
+          done    
 
       - name: Copy files to EC2
         uses: appleboy/scp-action@v0.1.7
@@ -159,6 +159,22 @@ jobs:
           source: "./*"
           target: "~/dream-vacation-app"
 
+      - name: Wait for Docker Compose on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ needs.terraform.outputs.ec2_ip }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "Waiting for Docker Compose to be installed..."
+            for i in {1..30}; do
+              if docker-compose --version &> /dev/null; then
+                echo "Docker Compose is ready"
+                break
+              fi
+              sleep 10
+            done
+      
       - name: SSH into EC2 and Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
