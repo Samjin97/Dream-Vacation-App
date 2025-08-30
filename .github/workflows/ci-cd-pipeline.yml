@@ -176,6 +176,13 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            if ! command -v docker &> /dev/null; then
+              sudo apt-get update
+              sudo apt-get install -y docker.io curl
+              sudo systemctl enable docker
+              sudo systemctl start docker
+              sudo usermod -aG docker ubuntu
+            fi
             cd ~/dream-vacation-app
             cat > .env <<EOF
             POSTGRES_USER=${{ secrets.POSTGRES_USER }}
