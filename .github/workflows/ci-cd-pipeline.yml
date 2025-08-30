@@ -118,6 +118,10 @@ jobs:
         working-directory: terraform
         run: terraform init -no-color
 
+      - name: Terraform
+        working-directory: terraform
+        run: terraform destroy -auto-approve -no-color
+
       - name: Terraform Apply
         working-directory: terraform
         run: terraform apply -auto-approve -no-color
