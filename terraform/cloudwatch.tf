@@ -1,6 +1,6 @@
 # IAM role for CloudWatch Agent
 resource "aws_iam_role" "cw_agent_role" {
-  name = "cw-agent-role"
+  name = "cw-agent-role-2"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -23,7 +23,7 @@ resource "aws_iam_role_policy_attachment" "cw_agent_attach" {
 # IAM instance profile for EC2
 resource "aws_iam_instance_profile" "cw_instance_profile" {
   name = "cw-instance-profile"
-  role = aws_iam_role.cw_agent_role.name
+  role = "cw-agent-role"
 }
 
 # CloudWatch alarm for CPU utilization
