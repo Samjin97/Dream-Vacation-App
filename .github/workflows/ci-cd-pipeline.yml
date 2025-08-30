@@ -7,14 +7,12 @@ on:
       - 'frontend/**'
       - 'backend/**'
       - '.github/workflows/**'
-      - 'docker-compose.yml'
   pull_request:
     branches: [ devops ]
     paths:
       - 'frontend/**'
       - 'backend/**'
       - '.github/workflows/**'
-      - 'docker-compose.yml'
   workflow_dispatch:
 
 env:
