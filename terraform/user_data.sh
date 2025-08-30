@@ -47,7 +47,3 @@ EOF
 # Enable and start CloudWatch Agent
 sudo systemctl enable amazon-cloudwatch-agent
 sudo systemctl start amazon-cloudwatch-agent
-
-# Optional: Test docker works for ubuntu user
-sudo -u ubuntu /usr/bin/docker run hello-world || true
-
