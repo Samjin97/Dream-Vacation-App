@@ -13,9 +13,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 # Add ubuntu user to docker group
 sudo usermod -aG docker ubuntu
-newgrp docker <<EONG
-echo "Docker group applied to ubuntu user"
-EONG
+
 
 # Install CloudWatch Agent
 sudo apt-get install -y amazon-cloudwatch-agent
