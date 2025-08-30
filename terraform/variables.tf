@@ -16,6 +16,7 @@ variable "subnet_cidr" {
 variable "key_name" {
   description = "Existing EC2 key pair name (created manually)"
   type        = string
+  default = "dream-key"
 }
 
 variable "instance_type" {

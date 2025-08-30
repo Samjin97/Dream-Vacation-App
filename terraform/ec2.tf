@@ -1,12 +1,4 @@
 ########################################
-# Key Pair
-########################################`
-resource "aws_key_pair" "dream_key" {
-  key_name   = "dream-key"
-  public_key = file("${path.module}/dream-key.pub")
-}
-
-########################################
 # Security Group
 ########################################
 resource "aws_security_group" "dream_sg" {
@@ -48,7 +40,7 @@ resource "aws_instance" "dream_ec2" {
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.dream_subnet.id
   vpc_security_group_ids = [aws_security_group.dream_sg.id]
-  key_name               = aws_key_pair.dream_key.key_name
+  key_name               = var.key_name
 
   user_data = file("${path.module}/user_data.sh")
 
