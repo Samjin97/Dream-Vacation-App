@@ -7,12 +7,14 @@ on:
       - 'frontend/**'
       - 'backend/**'
       - '.github/workflows/**'
+      - 'docker-compose.yml'
   pull_request:
     branches: [ devops ]
     paths:
       - 'frontend/**'
       - 'backend/**'
       - '.github/workflows/**'
+      - 'docker-compose.yml'
   workflow_dispatch:
 
 env:
@@ -117,10 +119,6 @@ jobs:
       - name: Terraform Init
         working-directory: terraform
         run: terraform init -no-color
-
-      - name: Terraform Destroy
-        working-directory: terraform
-        run: terraform destroy -auto-approve -no-color || true
 
       - name: Terraform Apply
         working-directory: terraform
