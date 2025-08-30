@@ -1,6 +1,6 @@
 # IAM role for CloudWatch Agent
 resource "aws_iam_role" "cw_agent_role" {
-  name = "cw-agent-role-2"
+  name = "cw-agent-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
