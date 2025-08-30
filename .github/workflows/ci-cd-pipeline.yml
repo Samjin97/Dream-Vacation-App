@@ -118,9 +118,9 @@ jobs:
         working-directory: terraform
         run: terraform init -no-color
 
-      - name: Terraform
+      - name: Terraform Destroy
         working-directory: terraform
-        run: terraform destroy -auto-approve -no-color
+        run: terraform destroy -auto-approve -no-color || true
 
       - name: Terraform Apply
         working-directory: terraform
