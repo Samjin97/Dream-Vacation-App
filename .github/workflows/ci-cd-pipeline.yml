@@ -142,7 +142,7 @@ jobs:
 
       # Setup SSH key
       - name: Setup SSH key
-        run: |
+        run: |  
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/dream-key
           chmod 600 ~/.ssh/dream-key
@@ -176,15 +176,18 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            # Ensure ubuntu user is in docker group
+            sudo usermod -aG docker ubuntu || true
+
             cd ~/dream-vacation-app
             cat > .env <<EOF
             POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             POSTGRES_DB=${{ secrets.POSTGRES_DB }}
             EOF
-            docker-compose pull
-            docker-compose up -d --remove-orphans
+            docker compose pull
+            docker compose up -d --remove-orphans
 
-            
+
 
             
