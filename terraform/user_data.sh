@@ -1,26 +1,39 @@
 #!/bin/bash
-# Update and install Docker
-sudo apt-get update -y
-sudo apt-get install -y docker.io curl
+set -euxo pipefail
 
-# Enable and start Docker
-sudo systemctl enable docker
-sudo systemctl start docker
+# Update system
+apt-get update -y
+apt-get upgrade -y
 
-# Add ubuntu user to docker group so docker commands work without sudo
-sudo usermod -aG docker ubuntu
+# Install prerequisites
+apt-get install -y ca-certificates curl gnupg lsb-release
 
-# Wait a few seconds for group change to apply
-sleep 5
+# Setup Docker repository
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
 
-# Install Docker Compose
-sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
-     -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+  https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+  | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-# Verify docker and docker-compose installation
-/usr/bin/docker --version
-/usr/local/bin/docker-compose --version
+# Retry loop for apt-get update (in case network isn’t ready)
+until apt-get update -y; do sleep 5; done
+
+# Install Docker & Compose
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Add ubuntu user to docker group
+usermod -aG docker ubuntu || true
+
+# Enable & start Docker
+systemctl enable docker
+systemctl start docker
+
+# Quick checks (won’t block boot if they fail)
+docker --version || true
+docker compose version || true
 
 # Install Amazon CloudWatch Agent
 sudo apt-get install -y amazon-cloudwatch-agent

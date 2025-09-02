@@ -2,12 +2,12 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ devops ]
+    branches: [ test-devops ]
     paths:
       - 'frontend/**'
       - 'backend/**' 
   pull_request:
-    branches: [ devops ]
+    branches: [ test-devops ]
     paths:
       - 'frontend/**'
       - 'backend/**'
@@ -28,7 +28,7 @@ jobs:
       - name: Lint frontend
         uses: github/super-linter@v6
         env:
-          DEFAULT_BRANCH: devops
+          DEFAULT_BRANCH: test-devops
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_JAVASCRIPT_ES: true
@@ -65,7 +65,7 @@ jobs:
       - name: Lint backend
         uses: github/super-linter@v6
         env:
-          DEFAULT_BRANCH: devops
+          DEFAULT_BRANCH: test-devops
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_JAVASCRIPT_ES: true
@@ -135,24 +135,6 @@ jobs:
   steps:
     - uses: actions/checkout@v4
 
-    # Setup SSH key
-    - name: Setup SSH key
-      run: |  
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/dream-key
-        chmod 600 ~/.ssh/dream-key
-
-    - name: Wait for EC2 SSH to be ready
-      run: |
-        for i in {1..30}; do
-          echo "Attempt $i: Checking SSH..."
-          if ssh -o StrictHostKeyChecking=no -i <(echo "${{ secrets.EC2_SSH_KEY }}") ubuntu@${{ needs.terraform.outputs.ec2_ip }} "echo '✅ SSH ready'"; then
-            echo "EC2 is ready for SSH"
-            break
-          fi
-          sleep 10
-        done
-
     - name: Copy files to EC2
       uses: appleboy/scp-action@v0.1.7
       with:
@@ -175,5 +157,5 @@ jobs:
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
           EOF
-          docker-compose pull
-          docker-compose up -d --remove-orphans
+          docker compose pull
+          docker compose up -d --remove-orphans
