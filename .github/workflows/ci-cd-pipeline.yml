@@ -152,17 +152,39 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo apt update
-            sudo apt install -y docker.io
+            # Update
+            sudo apt-get update -y
+
+            # Install dependencies
+            sudo apt-get install -y ca-certificates curl gnupg lsb-release
+
+            # Add Docker’s official GPG key
+            sudo install -m 0755 -d /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+            # Set up the Docker repository
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+              $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+            # Update and install Docker + Compose
+            sudo apt-get update -y
+            sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+            # Start and enable Docker
             sudo systemctl enable docker
             sudo systemctl start docker
-            sudo apt install -y docker-compose-plugin
-            sudo usermod -aG docker ubuntu
+
+            # Go to project folder
             cd ~/dream-vacation-app
             cat > .env <<EOF
             POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             POSTGRES_DB=${{ secrets.POSTGRES_DB }}
             EOF
+            
+            # Run containers
             sudo docker compose pull
             sudo docker compose up -d --remove-orphans
+
