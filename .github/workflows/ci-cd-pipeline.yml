@@ -5,12 +5,14 @@ on:
     branches: [ test-devops ]
     paths:
       - 'frontend/**'
-      - 'backend/**' 
+      - 'backend/**'
+      - '.github/workflows/**' 
   pull_request:
     branches: [ test-devops ]
     paths:
       - 'frontend/**'
       - 'backend/**'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 env:
