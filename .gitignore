@@ -1,6 +1,5 @@
 .env
-terraform/dream-key
-terraform/dream-key.pub
-.terraform/
+dream-key
 dream-key.pub
+.terraform/
 *.tfstate

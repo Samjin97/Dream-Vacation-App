@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euxo pipefail
 
+# Send all output (stdout + stderr) to both the console and a log file
+exec > >(tee -a /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1
+
+echo "===== USER DATA SCRIPT STARTED at $(date) ====="
+
 # Update system
 apt-get update -y
 apt-get upgrade -y
@@ -36,11 +41,11 @@ docker --version || true
 docker compose version || true
 
 # Install Amazon CloudWatch Agent
-sudo apt-get install -y amazon-cloudwatch-agent
+apt-get install -y amazon-cloudwatch-agent
 
 # Create CloudWatch Agent configuration
-sudo mkdir -p /opt/aws/amazon-cloudwatch-agent/etc/
-cat <<EOF | sudo tee /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+mkdir -p /opt/aws/amazon-cloudwatch-agent/etc/
+cat <<EOF > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 {
   "metrics": {
     "metrics_collected": {
@@ -58,5 +63,7 @@ cat <<EOF | sudo tee /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agen
 EOF
 
 # Enable and start CloudWatch Agent
-sudo systemctl enable amazon-cloudwatch-agent
-sudo systemctl start amazon-cloudwatch-agent
+systemctl enable amazon-cloudwatch-agent
+systemctl start amazon-cloudwatch-agent
+
+echo "===== USER DATA SCRIPT COMPLETED at $(date) ====="

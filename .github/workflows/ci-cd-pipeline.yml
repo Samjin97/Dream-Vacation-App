@@ -128,7 +128,7 @@ jobs:
         run: |
           EC2_IP=$(terraform output -raw ec2_public_ip)
           echo "ec2_ip=$EC2_IP" >> $GITHUB_OUTPUT
-  
+          echo "EC2 Public IP: $EC2_IP"
   # ---------------- DEPLOY ----------------
   deploy:
     runs-on: ubuntu-latest
@@ -143,7 +143,7 @@ jobs:
           host: ${{ needs.terraform.outputs.ec2_ip }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "docker-compose.yml, backend/**, frontend/**, terraform/**"
+          source: "docker-compose.yml"
           target: "~/dream-vacation-app"
 
       # Deploy containers
