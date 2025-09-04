@@ -2,13 +2,13 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ devops ]
+    branches: [ test-devops ]
     paths:
       - 'frontend/**'
       - 'backend/**'
       - '.github/workflows/**'
   pull_request:
-    branches: [ devops ]
+    branches: [ test-devops ]
     paths:
       - 'frontend/**'
       - 'backend/**'
@@ -30,7 +30,7 @@ jobs:
       - name: Lint frontend
         uses: github/super-linter@v6
         env:
-          DEFAULT_BRANCH: devops
+          DEFAULT_BRANCH: test-devops
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_JAVASCRIPT_ES: true
@@ -67,7 +67,7 @@ jobs:
       - name: Lint backend
         uses: github/super-linter@v6
         env:
-          DEFAULT_BRANCH: devops
+          DEFAULT_BRANCH: test-devops
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_JAVASCRIPT_ES: true
